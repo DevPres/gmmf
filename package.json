@@ -1,0 +1,19 @@
+{
+  "name": "gmmf",
+  "version": "0.0.1",
+  "description": "Open ssh connection and let you take your files with a drag n drop GUI",
+  "keywords": [
+    "files",
+    "ssh"
+  ],
+  "license": "GPL-3.0",
+  "author": "onirdev",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ssh2": "^1.17.0"
+  }
+}
