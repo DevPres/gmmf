@@ -1,3 +1,6 @@
+import { errorHandler } from "../core/errorHandler.js";
+import { connectionRoutes } from "./connectionRoutes.js";
+
 export const router = async (req, res) => {
     const { method, url } = req;
     const parsedUrl = new URL(url, `http://${req.headers.host}`);
@@ -16,6 +19,6 @@ export const router = async (req, res) => {
     if (pathname.startsWith('/connection')) {
         await connectionRoutes(req, res, pathname, method);
     } else {
-        throw Error({ code: 404, message: "Route not found" })
+        errorHandler({ code: 404, message: "Route not found" }, req, res)
     }
 }

@@ -1,42 +1,52 @@
 import { Client } from './ssh.cjs';
 
-let connection;
-let clientConnected = false;
 
-function createConnection() {
-    if (!clientConnected) {
-        connection = new Client();
-        connection.connect({
-            host: process.env.REMOTE_IP,
-            port: 22,
-            username: process.env.REMOTE_USERNAME,
-            password: process.env.REMOTE_PASSWORD
-        })
-        connection.on('close', () => {
-            console.log('Closing connection')
-            clientConnected = false;
-        });
 
-        connection.on('end', () => {
-            console.log('Closing connection')
-            clientConnected = false;
-        });
+class ClientSSH {
+    connection;
+    status = 'disconnected';
+
+    setConnected() {
+        this.status = 'connected';
+    }
+    setPending() {
+        this.status = 'pending';
+    }
+
+    setDisconnected() {
+        this.status = 'disconnected';
+    }
+
+
+    createConnection() {
+        console.log('Create connection...')
+        if (this.status === 'disconnected') {
+            this.connection = new Client();
+            this.connection.connect({
+                host: process.env.REMOTE_IP,
+                port: 22,
+                username: process.env.REMOTE_USERNAME,
+                password: process.env.REMOTE_PASSWORD
+            })
+            this.connection.on('close', () => {
+                console.log('Closing this.connection')
+                this.setDisconnected();
+            });
+
+            this.connection.on('end', () => {
+                console.log('Closing this.connection')
+                this.setDisconnected();
+            });
+        }
+    }
+
+    closeConnection() {
+        if (this.connection) {
+            console.log('Closing this.connection')
+            this.connection.end();
+        }
+        console.log('Exiting...')
     }
 }
 
-
-function closeConnection() {
-    if (connection) {
-        console.log('Closing connection')
-        connection.end();
-    }
-    console.log('Exiting...')
-}
-
-export {
-    connection,
-    clientConnected,
-    createConnection,
-    closeConnection,
-}
-
+export const ssh = new ClientSSH()
