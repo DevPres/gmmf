@@ -6,7 +6,6 @@ A lightweight Node.js server that manages SSH connections to remote servers, des
 
 - REST API for SSH connection management
 - Simple and lightweight HTTP server
-- CORS enabled for frontend integration
 
 ## Installation
 
@@ -33,18 +32,6 @@ node index.js
 ```
 
 The server runs on `http://localhost:4848`
-
-## API Endpoints
-
-### Connect to SSH Server
-
-```
-GET /connection/connect
-```
-
-**Response:**
-- `200` - Connection established or already connected
-- `500` - Connection error
 
 ## Tech Stack
 
