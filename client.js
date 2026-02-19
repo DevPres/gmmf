@@ -9,8 +9,11 @@ class ClientSSH {
     setConnected() {
         this.status = 'connected';
     }
-    setPending() {
-        this.status = 'pending';
+    setConnectionPending() {
+        this.status = 'connection';
+    }
+    setDisconnectionPending() {
+        this.status = 'disconnection'
     }
 
     setDisconnected() {
@@ -21,7 +24,10 @@ class ClientSSH {
     createConnection() {
         console.log('Create connection...')
         if (this.status === 'disconnected') {
-            this.connection = new Client();
+            if (!this.connection) {
+                this.connection = new Client();
+            }
+            this.setConnectionPending();
             this.connection.connect({
                 host: process.env.REMOTE_IP,
                 port: 22,
@@ -29,12 +35,12 @@ class ClientSSH {
                 password: process.env.REMOTE_PASSWORD
             })
             this.connection.on('close', () => {
-                console.log('Closing this.connection')
+                console.log('Closing connection')
                 this.setDisconnected();
             });
 
             this.connection.on('end', () => {
-                console.log('Closing this.connection')
+                console.log('Closing connection')
                 this.setDisconnected();
             });
         }
@@ -42,10 +48,10 @@ class ClientSSH {
 
     closeConnection() {
         if (this.connection) {
-            console.log('Closing this.connection')
+            console.log('Closing connection...')
+            this.setDisconnectionPending();
             this.connection.end();
         }
-        console.log('Exiting...')
     }
 }
 

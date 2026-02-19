@@ -4,7 +4,8 @@ import { connectionRoutes } from "./connectionRoutes.js";
 export const router = async (req, res) => {
     const { method, url } = req;
     const parsedUrl = new URL(url, `http://${req.headers.host}`);
-    const pathname = parsedUrl.pathname;
+    const [_, route, endpoint] = parsedUrl.pathname.split('/');
+    console.log(parsedUrl.pathname.split('/'))
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -16,9 +17,10 @@ export const router = async (req, res) => {
         return;
     }
 
-    if (pathname.startsWith('/connection')) {
-        await connectionRoutes(req, res, pathname, method);
+    if (route === 'connection') {
+        await connectionRoutes(req, res, endpoint, method);
     } else {
+        console.log('error')
         errorHandler({ code: 404, message: "Route not found" }, req, res)
     }
 }

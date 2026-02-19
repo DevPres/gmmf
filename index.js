@@ -22,11 +22,13 @@ process.on('exit', (code) => {
 // Catch Ctrl+C
 process.on('SIGINT', () => {
     client.closeConnection();
+    console.log('Exiting...')
     process.exit();
 });
 
 // Catch 'kill' commands
 process.on('SIGTERM', () => {
     client.closeConnection();
+    console.log('Exiting...')
     process.exit();
 });
