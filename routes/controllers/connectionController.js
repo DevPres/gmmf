@@ -70,9 +70,45 @@ async function disconnect(req, res) {
     return
 }
 
+async function readDir(req, res) {
+    console.log(client.status)
+    if (client.status !== "connected") {
+        res.writeHead(400, { 'content-type': 'application/json' });
+        res.end(JSON.stringify({
+            client: "Client not ready",
+        }));
+        return
+    }
+
+    client.connection.sftp((err, sftp) => {
+        if (err) {
+            errorHandler({
+                code: 500,
+                message: `Can't create sftp connection -> ${err}`
+            }, req, res);
+            return
+        }
+        sftp.readdir('Downloads', (err, list) => {
+            if (err) {
+                errorHandler({ code: 400, message: err }, req, res);
+                return
+            }
+            console.dir(list);
+            res.writeHead(200, { 'content-type': 'application/json' });
+            res.end(JSON.stringify({
+                client: "connected",
+                data: list
+
+            }));
+
+        });
+    })
+}
+
 
 export {
     connect,
     disconnect,
+    readDir,
 }
 
